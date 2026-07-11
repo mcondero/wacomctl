@@ -1,116 +1,118 @@
 # wacomctl
 
-Um utilitário de linha de comando para controlar tablets Wacom no Linux.
+A command-line utility for controlling Wacom tablets on Linux.
 
-## Descrição
+## Description
 
-O `wacomctl` é uma ferramenta simples escrita em Go que permite mapear e controlar a stylus de tablets Wacom para diferentes monitores ou desabilitá-la/habilitá-la conforme necessário.
+The `wacomctl` tool is a simple Go application that can map and control the Wacom stylus to different monitors or disable/enable it as needed.
 
-## Pré-requisitos
+## Prerequisites
 
-- Sistema Linux com X11
-- Tablet Wacom conectado
-- Pacotes `xsetwacom` e `xinput` instalados
-- Go 1.x (para compilação)
+- Linux system with X11
+- Connected Wacom tablet
+- `xsetwacom` and `xinput` packages installed
+- Go 1.x (for building)
 
-## Instalação
+## Installation
 
-1. Clone ou baixe o código fonte
-2. Compile o executável:
+1. Clone or download the source code
+2. Build the executable:
 
    ```bash
    go build -o wacomctl wacomctl.go
    ```
 
-3. Torne o executável disponível no PATH (opcional):
+3. Make the executable available in your PATH (optional):
 
    ```bash
    sudo mv wacomctl /usr/local/bin/
    ```
 
-## Uso
+## Usage
 
 ```bash
-wacomctl [vga|hdmi|both|off|on]
+wacomctl
 ```
 
-### Comandos
+Without arguments, the program opens an interactive selector with the detected monitors and additional options to map to all monitors, turn off, or turn on the stylus.
 
-- **`vga`** - Mapeia a stylus para o monitor VGA conectado (ex: VGA-1)
-- **`hdmi`** - Mapeia a stylus para o monitor HDMI conectado (ex: HDMI-1)
-- **`both`** - Mapeia a stylus para todos os monitores ativos (desktop completo)
-- **`off`** - Desliga a stylus (desabilita o dispositivo)
-- **`on`** - Liga a stylus (habilita o dispositivo)
+### Commands
 
-### Exemplos
+- **`interactive`** - Opens the interactive selector to choose between detected monitors, both, turn off, and turn on
+- **`map <monitor>`** - Maps the stylus to the provided monitor (for example, `HDMI-1`)
+- **`both`** - Maps the stylus to all active monitors (full desktop)
+- **`off`** - Turns the stylus off (disables the device)
+- **`on`** - Turns the stylus on (enables the device)
+
+### Examples
 
 ```bash
-# Mapear stylus para monitor VGA
-wacomctl vga
+# Interactive selector
+wacomctl
 
-# Mapear stylus para monitor HDMI
-wacomctl hdmi
+# Map to a specific monitor
+wacomctl map HDMI-1
 
-# Mapear stylus para todos os monitores
+# Map to all monitors
 wacomctl both
 
-# Desligar a stylus
+# Turn the stylus off
 wacomctl off
 
-# Ligar a stylus
+# Turn the stylus on
 wacomctl on
 ```
 
-## Funcionamento
+## How it works
 
-O programa utiliza as seguintes ferramentas do sistema:
+The program uses the following system tools:
 
-- **`xsetwacom`** - Para detectar e configurar dispositivos Wacom
-- **`xrandr`** - Para listar monitores conectados
-- **`xinput`** - Para habilitar/desabilitar o dispositivo
+- **`xsetwacom`** - To detect and configure Wacom devices
+- **`xrandr`** - To list connected monitors
+- **`xinput`** - To enable/disable the device
 
-### Detecção automática
+### Automatic detection
 
-- Detecta automaticamente o ID do dispositivo stylus através do comando `xsetwacom --list devices`
-- Identifica monitores VGA e HDMI conectados através do comando `xrandr --listmonitors`
-- Mapeia a área ativa da stylus para o monitor especificado
+- Automatically detects the stylus device ID using `xsetwacom --list devices`
+- Identifies connected VGA and HDMI monitors using `xrandr --listmonitors`
+- Maps the active stylus area to the specified monitor
 
-## Limitações
+## Limitations
 
-- Funciona apenas em sistemas X11 (não Wayland)
-- Requer que os monitores estejam conectados e ativos
-- Detecta apenas o primeiro dispositivo stylus encontrado
-- Suporta apenas monitores VGA e HDMI (não DisplayPort, DVI, etc.)
+- Works only on X11 systems (not Wayland)
+- Requires monitors to be connected and active
+- Detects only the first stylus device found
+- Supports only VGA and HDMI monitors (not DisplayPort, DVI, etc.)
 
-## Solução de problemas
+## Troubleshooting
 
-### Dispositivo não encontrado
-
-```text
-Dispositivo de stylus não encontrado.
-```
-
-- Verifique se o tablet Wacom está conectado
-- Execute `xsetwacom --list devices` para verificar se o dispositivo é reconhecido
-
-### Monitor não encontrado
+### Stylus device not found
 
 ```text
-Nenhum monitor VGA/HDMI encontrado.
+Stylus device not found.
 ```
 
-- Verifique se o monitor está conectado e ativo
-- Execute `xrandr --listmonitors` para ver os monitores disponíveis
+- Check that the Wacom tablet is connected
+- Run `xsetwacom --list devices` to verify the device is recognized
 
-### Erro de mapeamento
+### Monitor not found
 
 ```text
-Erro ao mapear stylus: ...
+No monitor VGA/HDMI found.
 ```
 
-- Verifique se você tem permissões adequadas
-- Certifique-se de que o `xsetwacom` está instalado
+- Check that the monitor is connected and active
+- Run `xrandr --listmonitors` to see the available monitors
 
-## Licença
+### Mapping error
 
-Este projeto é de domínio público. Use livremente.
+```text
+Failed to map stylus: ...
+```
+
+- Check that you have the appropriate permissions
+- Make sure `xsetwacom` is installed
+
+## License
+
+This project is in the public domain. Use it freely.
